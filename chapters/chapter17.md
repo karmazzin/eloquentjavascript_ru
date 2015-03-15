@@ -68,7 +68,7 @@ Last-Modified: Wed, 09 Apr 2014 10:48:09 GMT
 
 На страницах HTML могут быть формы, которые позволяют пользователям вписывать информацию и отправлять её на сервер. Вот пример формы:
 
-```html
+```
 <form method="GET" action="example/message.html">
   <p>Имя: <input type="text" name="name"></p>
   <p>Сообщение:<br><textarea name="message"></textarea></p>
@@ -169,7 +169,7 @@ req.send(null);
 
 Когда ресурс, возвращённый объектом XMLHttpRequest, является документом XML, свойство responseXML будет содержать разобранное представление о документе. Оно работает схожим с DOM образом, за исключением того, что у него нет присущей HTML функциональности навроде свойства style. Объект, содержащийся в responseXML, соответствует объекту document. Его свойство documentElement ссылается на внешний тег документа XML. В следующем документе (example/fruit.xml) таким тегом будет :
 
-```html
+```
 <fruits>
   <fruit name="banana" color="yellow"/>
   <fruit name="lemon" color="yellow"/>
@@ -337,7 +337,7 @@ function getJSON(url) {
 
 Нам нужно получить имя матери супруга из example/bert.json. В случае проблем нам нужно убрать текст «загрузка» и показать сообщение об ошибке. Вот как это можно делать при помощи обещаний:
 
-```html
+```
 <script>
   function showMessage(msg) {
     var elt = document.createElement("div");

@@ -402,7 +402,7 @@ function getChangedTalks(since) {
 
 Значит, если надо показать страницу, когда браузер будет запрашивать наш сервер, её надо положить в public/index.html. Вот начало файла index:
 
-```html
+```
 <!doctype html>
 
 <title>Обмен опытом</title>
@@ -421,7 +421,7 @@ function getChangedTalks(since) {
 
 Затем идёт форма для создания новой темы.
 
-```html
+```
 <form id="newtalk">
   <h3>Submit a talk</h3>
   Заголовок: <input type="text" style="width: 40em" name="title">
@@ -435,7 +435,7 @@ function getChangedTalks(since) {
 
 Затем идёт загадочный блок, у которого стиль display установлен в none, и который поэтому не виден на странице. Догадаетесь, зачем он нужен?
 
-```html
+```
 <div id="template" style="display: none">
   <div>
     <h2>{{title}}</h2>
@@ -460,7 +460,7 @@ function getChangedTalks(since) {
 
 И наконец, HTML включает файл скрипта, содержащего клиентский код.
 
-```html
+```
 <script src="skillsharing_client.js"></script>
 ```
 
@@ -706,7 +706,7 @@ function waitForChanges() {
 
 Это могло бы выглядеть так:
 
-```html
+```
 <div>
   <div template-repeat="comments">
     <span>{{author}}</span>: {{message}}
