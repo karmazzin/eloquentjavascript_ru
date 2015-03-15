@@ -508,8 +508,6 @@ console.log(min(0, -10));
 
 Потестируйте её на 50 и 75. Попробуйте задать ей -1. Почему она ведёт себя таким образом? Можно ли её как-то исправить?
 
-Test it on 50 and 75. See how it behaves on -1. Why? Can you think of a way to fix this?
-
 ```
 console.log(isEven(50));
 // → true
