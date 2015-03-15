@@ -116,7 +116,7 @@ module.exports = function(string) {
 
 Теперь мы можем вызвать наш инструмент:
 
-```sh
+```
 $ node main.js JavaScript
 Of{fXhwnuy
 ```
