@@ -163,7 +163,7 @@
 
 Для цифр и букв код будет кодом символа Unicode, связанного с прописным символом, изображённым на кнопке. Метод строки charCodeAt даёт нам этот код.
 
-```js
+```
 console.log("Violet".charCodeAt(0));
 // → 86
 console.log("1".charCodeAt(0));
@@ -393,7 +393,7 @@ console.log("1".charCodeAt(0));
 
 Предположим, у нас есть следующий код в файле `code/squareworker.js`:
 
-```js
+```
 addEventListener("message", function(event) {
   postMessage(event.data * event.data);
 });
@@ -401,7 +401,7 @@ addEventListener("message", function(event) {
 
 Представьте, что возведение в квадрат – очень тяжёлое, долго работающее вычисление, которое нам надо запустить фоновым потоком. Такой код порождает «рабочего», отправляет ему несколько сообщений, и выводит результаты.
 
-```js
+```
 var squareWorker = new Worker("code/squareworker.js");
 squareWorker.addEventListener("message", function(event) {
   console.log("The worker responded:", event.data);
@@ -427,7 +427,7 @@ squareWorker.postMessage(24);
 
 Иногда вам надо отменить запланированную функцию. Это можно сделать, сохранив значение, возвращаемое setTimeout, и затем вызвав с ним clearTimeout.
 
-```js
+```
 var bombTimer = setTimeout(function() {
   console.log("BOOM!");
 }, 500);
@@ -442,7 +442,7 @@ if (Math.random() < 0.5) { // 50% chance
 
 Похожий набор функций, setInterval и clearInterval используется для установки таймеров, которые будут повторяться каждые X миллисекунд.
 
-```js
+```
 var ticks = 0;
 var clock = setInterval(function() {
   console.log("tick", ticks++);

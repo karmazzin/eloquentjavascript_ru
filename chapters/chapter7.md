@@ -15,7 +15,7 @@
 
 Определить мир мы можем при помощи плана – массива строк, который раскладывает мировую сетку, используя один символ на клетку.
 
-```js
+```
 var plan = ["############################",
             "#      #    #      o      ##",
             "#                          #",
@@ -37,7 +37,7 @@ var plan = ["############################",
 ##Изображаем пространство
 У сетки, моделирующей мир, заданы ширина и высота. Клетки определяются координатами x и y. Мы используем простой тип Vector (из упражнений к предыдущей главе) для представления этих пар координат.
 
-```js
+```
 function Vector(x, y) {
   this.x = x;
   this.y = y;
@@ -51,7 +51,7 @@ Vector.prototype.plus = function(other) {
 
 Для хранения сетки значений у нас есть несколько вариантов. Можно использовать массив из массивов-строк, и использовать двухступенчатый доступ к свойствам:
 
-```js
+```
 var grid = [["top left",    "top middle",    "top right"],
             ["bottom left", "bottom middle", "bottom right"]];
 console.log(grid[1][2]);
@@ -60,7 +60,7 @@ console.log(grid[1][2]);
 
 Или мы можем взять один массив, размера width × height, и решить, что элемент (x, y) находится в позиции x + (y × width).
 
-```js
+```
 var grid = ["top left",    "top middle",    "top right",
             "bottom left", "bottom middle", "bottom right"];
 console.log(grid[2 + (1 * 3)]);
@@ -71,7 +71,7 @@ console.log(grid[2 + (1 * 3)]);
 
 Следующий код объявляет объект Grid (сетка) с основными методами:
 
-```js
+```
 function Grid(width, height) {
   this.space = new Array(width * height);
   this.width = width;
@@ -91,7 +91,7 @@ Grid.prototype.set = function(vector, value) {
 
 Элементарный тест:
 
-```js
+```
 var grid = new Grid(5, 5);
 console.log(grid.get(new Vector(1, 1)));
 // → undefined
@@ -105,7 +105,7 @@ console.log(grid.get(new Vector(1, 1)));
 
 Существа ужасно близоруки и видят только непосредственно прилегающие к ним клетки. Но и это может пригодиться при выборе действий. При вызове метода act ему даётся объект view, который позволяет существу изучить прилегающую местность. Мы называем восемь соседних клеток их направлениями по компасу: “n” на север, “ne” на северо-восток, и т.п. Вот какой объект будет использоваться для преобразования из названий направлений в смещения по координатам:
 
-```js
+```
 var directions = {
   "n":  new Vector( 0, -1),
   "ne": new Vector( 1, -1),
@@ -122,7 +122,7 @@ var directions = {
 
 Вот простое тупое существо, которое просто идёт, пока не врезается в препятствие, а затем отскакивает в случайном направлении.
 
-```js
+```
 function randomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
@@ -147,7 +147,7 @@ BouncingCritter.prototype.act = function(view) {
 ##Мировой объект
 Теперь можно приступать к мировому объекту World. Конструктор принимает план (массив строк, представляющих сетку мира) и объект legend. Это объект, сообщающий, что означает каждый из символов карты. В нём есть конструктор для каждого символа – кроме пробела, который ссылается на null (представляющий пустое пространство).
 
-```js
+```
 function elementFromChar(legend, ch) {
   if (ch == " ")
     return null;
@@ -173,7 +173,7 @@ function World(map, legend) {
 
 Нам понадобится это свойство originChar при изготовлении мирового метода toString. Метод строит карту в виде строки из текущего состояния мира, проходя двумерным циклом по клеткам сетки.
 
-```js
+```
 function charFromElement(element) {
   if (element == null)
     return " ";
@@ -196,13 +196,13 @@ World.prototype.toString = function() {
 
 Стена wall – простой объект. Используется для занятия места и не имеет метода act.
 
-```js
+```
 function Wall() {}
 ```
 
 Проверяя объект World, создав экземпляр с использованием плана, заданного в начале главы, и затем вызвав его метод toString, мы получим очень похожую на этот план строку.
 
-```js
+```
 var world = new World(plan, {"#": Wall, "o": BouncingCritter});
 console.log(world.toString());
 // → ############################
@@ -227,7 +227,7 @@ this и его область видимости
 
 Это промах в дизайне JavaScript. К счастью, в следующей версии есть решение этой проблемы. А пока есть пути обхода. Обычно пишут
 
-```js
+```
 var self = this
 ```
 
@@ -235,7 +235,7 @@ var self = this
 
 Другое решение – использовать метод bind, который позволяет привязаться к конкретному объекту this.
 
-```js
+```
 var test = {
   prop: 10,
   addPropTo: function(array) {
@@ -252,7 +252,7 @@ console.log(test.addPropTo([5]));
 
 Большинство стандартных методов высшего порядка у массивов, таких как forEach и map, принимают необязательный второй аргумент, который тоже можно использовать для передачи this при вызовах итерационной функции. Вы могли бы написать предыдущий пример чуть проще:
 
-```js
+```
 var test = {
   prop: 10,
   addPropTo: function(array) {
@@ -269,7 +269,7 @@ console.log(test.addPropTo([5]));
 
 В нашей собственной функции высшего порядка мы можем включить поддержку контекстного параметра, используя метод call для вызова функции, переданной в качестве аргумента. К примеру, вот вам метод forEach для нашего типа Grid, вызывающий заданную функцию для каждого элемента решётки, который не равен null или undefined:
 
-```js
+```
 Grid.prototype.forEach = function(f, context) {
   for (var y = 0; y < this.height; y++) {
     for (var x = 0; x < this.width; x++) {
@@ -286,7 +286,7 @@ Grid.prototype.forEach = function(f, context) {
 
 Есть одна возможная проблема. Можете увидеть, какая? Если мы позволим существам двигаться по мере того, как мы их перебираем, они могут перейти на клетку, которую мы ещё не обработали, и тогда мы позволим им сдвинуться ещё раз, когда очередь дойдёт до этой клетки. Таким образом, нам надо хранить массив существ, которые уже сделали свой шаг, и игнорировать их при повторном проходе.
 
-```js
+```
 World.prototype.turn = function() {
   var acted = [];
   this.grid.forEach(function(critter, vector) {
@@ -300,7 +300,7 @@ World.prototype.turn = function() {
 
 Второй параметр метода forEach используется для доступа к правильной переменной this во внутренней функции. Метод letAct содержит логику, которая позволяет существам двигаться.
 
-```js
+```
 World.prototype.letAct = function(critter, vector) {
   var action = critter.act(new View(this, vector));
   if (action && action.type == "move") {
@@ -331,7 +331,7 @@ World.prototype.checkDestination = function(action, vector) {
 
 А пропущенная часть, тип View, выглядит следующим образом:
 
-```js
+```
 function View(world, vector) {
   this.world = world;
   this.vector = vector;
@@ -362,7 +362,7 @@ View.prototype.find = function(ch) {
 ##Оно двигается
 Мы создали экземпляр мирового объекта. Теперь, когда все необходимые методы готовы, у нас должно получиться заставить его двигаться.
 
-```js
+```
 for (var i = 0; i < 5; i++) {
   world.turn();
   console.log(world.toString());
@@ -372,7 +372,7 @@ for (var i = 0; i < 5; i++) {
 
 Просто выводить пять копий карты – не очень удобный способ наблюдения за миром. Поэтому в песочнице для книги (или <a href="http://eloquentjavascript.net/code/chapter/07_elife.zip">в файлах для скачивания</a>) есть волшебная функция animateWorld, которая показывает мир как анимацию на экране, делая по три шага в секунду, пока вы не нажмёте стоп.
 
-```js
+```
 animateWorld(world);
 // → … заработало!
 ```
@@ -386,7 +386,7 @@ animateWorld(world);
 
 Нам нужно будет вычислять, используя направления в пространстве. Так как направления заданы набором строк, нам надо задать свою операцию dirPlus для подсчёта относительных направлений. dirPlus(«n», 1) означает поворот по часовой на 45 градусов на север, что приводит к “ne”. dirPlus(«s», -2) означает поворот против часовой с юга, то есть на восток.
 
-```js
+```
 var directionNames = Object.keys(directions);
 function dirPlus(dir, n) {
   var index = directionNames.indexOf(dir);
@@ -419,7 +419,7 @@ WallFollower.prototype.act = function(view) {
 
 Этот небольшой мир показывает существ, двигающихся по стенам.:
 
-```js
+```
 animateWorld(new World(
   ["############",
    "#     #    #",
@@ -443,7 +443,7 @@ animateWorld(new World(
 
 Одно из решений – использовать наследование. Мы создаём новый конструктор, LifelikeWorld, чей прототип основан на прототипе World, но переопределяет метод letAct. Новый letAct передаёт работу по совершению действий в разные функции, хранящиеся в объекте actionTypes.
 
-```js
+```
 function LifelikeWorld(map, legend) {
   World.call(this, map, legend);
 }
@@ -472,7 +472,7 @@ LifelikeWorld.prototype.letAct = function(critter, vector) {
 ##Обработчики действий
 Самое простое действие – рост, его используют растения. Когда возвращается объект action типа {type: «grow»}, будет вызван следующий метод-обработчик:
 
-```js
+```
 actionTypes.grow = function(critter) {
   critter.energy += 0.5;
   return true;
@@ -483,7 +483,7 @@ actionTypes.grow = function(critter) {
 
 Движение получается более сложным.
 
-```js
+```
 actionTypes.move = function(critter, vector, action) {
   var dest = this.checkDestination(action, vector);
   if (dest == null ||
@@ -501,7 +501,7 @@ actionTypes.move = function(critter, vector, action) {
 
 Кроме движения, существа могут есть.
 
-```js
+```
 actionTypes.eat = function(critter, vector, action) {
   var dest = this.checkDestination(action, vector);
   var atDest = dest != null && this.grid.get(dest);
@@ -517,7 +517,7 @@ actionTypes.eat = function(critter, vector, action) {
 
 И наконец, мы позволяем существам размножаться.
 
-```js
+```
 actionTypes.reproduce = function(critter, vector, action) {
   var baby = elementFromChar(this.legend,
                              critter.originChar);
@@ -539,7 +539,7 @@ actionTypes.reproduce = function(critter, vector, action) {
 ##Населяем мир
 Теперь у нас есть основа для симуляции существ, больше похожих на настоящие. Мы могли бы поместить в новый мир существ из старого, но они бы просто умерли, так как у них нет свойства energy. Давайте сделаем новых. Сначала напишем растение, которое, по сути, довольно простая форма жизни.
 
-```js
+```
 function Plant() {
   this.energy = 3 + Math.random() * 4;
 }
@@ -558,7 +558,7 @@ Plant.prototype.act = function(context) {
 
 Теперь определим поедателя растений.
 
-```js
+```
 function PlantEater() {
   this.energy = 20;
 }
@@ -579,7 +579,7 @@ PlantEater.prototype.act = function(context) {
 ##Вдохнём жизнь
 И теперь у нас есть достаточно элементов для нового мира. Представьте следующую карту как травянистую долину, где пасётся стадо травоядных, лежат несколько валунов и цветёт буйная растительность.
 
-```js
+```
 var valley = new LifelikeWorld(
   ["############################",
    "#####                 ######",
@@ -609,7 +609,7 @@ var valley = new LifelikeWorld(
 
 Напишите новый тип существа, который старается справится с одним или несколькими проблемами и замените им старый тип PlantEater в мире долины. Последите за ними. Выполните необходимые подстройки.
 
-```js
+```
 // Ваш код
 function SmartPlantEater() {}
 
@@ -637,7 +637,7 @@ animateWorld(new LifelikeWorld(
 
 Увеличение мира может помочь в этом. Тогда локальные демографические взрывы или уменьшение численности имеют меньше шансов полностью изничтожить популяцию, и есть место для относительно большой популяции жертв, которая может поддерживать небольшую популяцию хищников.
 
-```js
+```
 // Ваш код тут
 function Tiger() {}
 

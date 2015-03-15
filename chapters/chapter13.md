@@ -72,7 +72,7 @@
 
 При работе с такими вложенными структурами пригождаются рекурсивные функции. Следующая ищет в документе текстовые узлы, содержащие заданную строку, и возвращает true, когда находит:
 
-```js
+```
 function talksAbout(node, string) {
   if (node.nodeType == document.ELEMENT_NODE) {
     for (var i = 0; i < node.childNodes.length; i++) {
@@ -96,7 +96,7 @@ console.log(talksAbout(document.body, "книг"));
 
 Так что если нам нужен атрибут href из ссылки, мы не должны писать в программе что-то вроде: «второй ребёнок шестого ребёнка document.body». Лучше бы, если б мы могли сказать: «первая ссылка в документе». И так можно сделать:
 
-```js
+```
 var link = document.body.getElementsByTagName("a")[0];
 console.log(link.href);
 ```
@@ -166,7 +166,7 @@ console.log(link.href);
 
 Если вам нужно работать с фиксированным списком узлов вместо «живого», можно преобразовать его в настоящий массив при помощи метода slice.
 
-```js
+```
 var arrayish = {0: "один", 1: "два", length: 2};
 var real = Array.prototype.slice.call(arrayish, 0);
 real.forEach(function(elt) { console.log(elt); });
@@ -222,7 +222,7 @@ real.forEach(function(elt) { console.log(elt); });
 
 Рекомендую перед именами придуманных атрибутов ставить “data-“, чтобы быть уверенным, что они не конфликтуют с любыми другими. В качестве простого примера мы напишем подсветку синтаксиса, который ищет теги `<pre>` (“preformatted”, предварительно отформатированный – используется для кода и простого текста) с атрибутом data-language (язык) и довольно грубо пытается подсветить ключевые слова в языке.
 
-```js
+```
 function highlightCode(node, keywords) {
   var text = node.textContent;
   node.textContent = ""; // Очистим узел

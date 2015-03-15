@@ -323,7 +323,7 @@
 
 У FileReaders также есть событие “error”, когда чтение файла не получается. Объект error будет сохранён в свойстве error. Если вы не хотите забивать голову ещё одной неудобной асинхронной схемой, вы можете обернуть её в обещание (см. главу 17):
 
-```js
+```
 function readFile(file) {
   return new Promise(function(succeed, fail) {
     var reader = new FileReader();
@@ -347,7 +347,7 @@ function readFile(file) {
 
 Можно хранить строковые данные так, что они переживут перезагрузку страниц — для этого надо положить их в объект localStorage. Он разрешает хранить строковые данные под именами (которые тоже являются строками), как в этом примере:
 
-```js
+```
 localStorage.setItem("username", "marijn");
 console.log(localStorage.getItem("username"));
 // → marijn
