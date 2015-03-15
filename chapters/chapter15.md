@@ -369,7 +369,7 @@ DOMDisplay.prototype.clear = function() {
 
 Теперь мы можем показать наш уровень.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <script>
@@ -682,7 +682,7 @@ function runGame(plans, Display) {
 
 В переменной GAME_LEVELS хранится набор планов уровней. Такая страница скармливает их в runGame, которая запускает саму игру.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <body>
@@ -700,7 +700,7 @@ function runGame(plans, Display) {
 
 Подредактируйте runGame, чтобы она поддерживала жизни. Пусть игрок начинает с трёх.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <body>
@@ -733,7 +733,7 @@ function runGame(plans, Display) {
 
 Когда получится, можете попробовать ещё кое-что. Мы регистрируем события с клавиатуры не самым лучшим способом. Объект arrows – глобальная переменная, и его обработчики событий находятся в памяти, даже если игра не запущена. Можно сказать, они утекают из системы. Расширьте trackKeys, чтоб можно было разрегистрировать обработчики и затем поменяйте runLevel, чтоб она регистрировала их на старте, и разрегистрировала на финише.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <body>

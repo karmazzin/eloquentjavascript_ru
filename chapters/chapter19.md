@@ -361,7 +361,7 @@ function randomPointInRadius(radius) {
 
 Теперь наша программа для рисования готова. Запустите код и попробуйте.
 
-```
+```html
 <link rel="stylesheet" href="css/paint.css">
 <body>
   <script>createPaint(document.body);</script>
@@ -378,7 +378,7 @@ function randomPointInRadius(radius) {
 
 Если не придумаете, вспомните о стиле position: absolute, который мы обсуждали в главе 13. который можно использовать, чтобы выводить узел поверх остального документа. Свойства pageX и pageY событий мыши можно использовать для точного расположения элемента под мышью, записывая нужные значения в стили left, top, width и height.
 
-```
+```html
 <script>
   tools.Rectangle = function(event, cx) {
     // Ваш код
