@@ -292,12 +292,12 @@ console.log(filter(ancestry, function(person) {
 
 Как и forEach, filter – это один из стандартных методов массива. В примере мы описали такую функцию, только чтобы показать, что она делает внутри. Отныне мы будем использовать её просто:
 
-c```
-onsole.log(ancestry.filter(function(person) {
+```js
+console.log(ancestry.filter(function(person) {
   return person.father == "Carel Haverbeke";
 }));
 // → [{name: "Carolus Haverbeke", …}]
-```js
+```
 
 ##Преобразования при помощи map
 Допустим, есть у нас архив объектов, представляющих людей, который был получен фильтрацией массива предков. Но нам нужен массив имён, который было бы проще прочесть.
