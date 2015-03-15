@@ -44,7 +44,7 @@
 
 Запрос GET к /talks возвращает документ JSON типа этого:
 
-```
+```json
 {"serverTime": 1405438911833,
  "talks": [{"title": "Unituning ",
             "presenter": "Васисуалий",
@@ -58,30 +58,34 @@
 
 Поскольку заголовки тем могут содержать пробелы и другие символы, которые нельзя вставлять в URL, при создании URL их надо закодировать при помощи функции encodeURIComponent.
 
-```
+```js
 console.log("/talks/" + encodeURIComponent("How to Idle"));
 // → /talks/How%20to%20Idle
 ```
 
 Запрос на создание темы может выглядеть так:
 
+```
 PUT /talks/How%20to%20Idle HTTP/1.1
 Content-Type: application/json
 Content-Length: 92
 
 {«presenter»: «Даша»,
  «summary»: «Неподвижно стоим на моноцикле»}
+```
 
 Такие URL поддерживают запросы GET для получения JSON-представления темы и DELETE для удаления темы.
 
 Добавление комментария происходит через POST запрос к URL вида /talks/Unituning/comments, с объектом JSON, содержащим свойства author и message в теле запроса.
 
+```
 POST /talks/Unituning/comments HTTP/1.1
 Content-Type: application/json
 Content-Length: 72
 
 {«author»: «Alice»,
  «message»: «Will you talk about raising a cycle?»}
+```
 
 Для поддержки длинных запросов, запросы GET к /talks могут включать параметр под именем changesSince, показывающий, что клиенту нужны обновления, случившиеся после заданной точки во времени. Когда обновления появляются, они сразу же возвращаются. Когда их нет, запрос задерживается, пока что-нибудь не случится, или пока не пройдёт заданный период времени (мы зададим 90 секунд).
 
@@ -89,6 +93,7 @@ Content-Length: 72
 
 Поэтому в ответах на запросы GET к /talks и существует свойство serverTime. Оно сообщает клиенту точное время по часам сервера, когда были созданы передаваемые данные. Клиент просто сохраняет время и передаёт его вместе со следующим запросом, чтобы убедиться, что он получает только те обновления, которых ещё не получал.
 
+```
 GET /talks?changesSince=1405438911833 HTTP/1.1
 
 (прошло время)
@@ -100,6 +105,7 @@ Content-Length: 95
 {«serverTime»: 1405438913401,
  «talks»: [{«title»: «Unituning»,
  «deleted»: true}]}
+```
 
 Когда тема меняется, создаётся или комментируется, в ответ на следующий запрос включается полная информация о теме. Когда тема удаляется, включаются только название и свойство deleted. Клиент может добавлять темы с заголовками, которые он ещё не видел, к странице, обновлять темы, которые он уже показывает, и удалять темы, которые были удалены.
 
@@ -119,7 +125,7 @@ Content-Length: 95
 
 Вот файл router.js, который будет запрашиваться через require из модуля сервера:
 
-```
+```js
 var Router = module.exports = function() {
   this.routes = [];
 };
@@ -157,7 +163,7 @@ Router.prototype.resolve = function(request, response) {
 
 Я выбрал ecstatic. Это не единственный сервер на NPM, но он хорошо работает и удовлетворяет нашим требованиям. Модуль ecstatic экспортирует функцию, которую можно вызвать с объектом конфигурации, чтобы она выдала функцию обработчика. Мы используем опцию root, чтобы сообщить серверу, где нужно искать файлы. Обработчик принимает параметры request и response, и его можно передать напрямую в createServer, чтобы создать сервер, который отдаёт только файлы. Но сначала нам нужно проверить те запросы, которые мы обрабатываем особо – поэтому мы обёртываем его в ещё одну функцию.
 
-```
+```js
 var http = require("http");
 var Router = require("./router");
 var ecstatic = require("ecstatic");
@@ -190,7 +196,7 @@ function respondJSON(response, status, data) {
 
 Обработчик для запросов GET одной темы должен найти её и либо вернуть данные в JSON, либо выдать ошибку 404.
 
-```
+```js
 var talks = Object.create(null);
 
 router.add("GET", /^\/talks\/([^\/]+)$/,
@@ -217,7 +223,7 @@ router.add("DELETE", /^\/talks\/([^\/]+)$/,
 
 Чтобы было просто получать контент тел запросов, закодированных при помощи JSON, мы определяем функцию readStreamAsJSON, которая читает всё содержимое потока, разбирает его по правилам JSON и затем делает обратный вызов.
 
-```
+```js
 function readStreamAsJSON(stream, callback) {
   var data = "";
   stream.on("data", function(chunk) {
@@ -239,7 +245,7 @@ function readStreamAsJSON(stream, callback) {
 
 Если данные выглядят приемлемо, обработчик сохраняет объект, представляющий новую тему, в объекте talks, при этом, возможно, перезаписывая существующую тему с таким же заголовком, и опять вызывает registerChange.
 
-```
+```js
 router.add("PUT", /^\/talks\/([^\/]+)$/,
            function(request, response, title) {
   readStreamAsJSON(request, function(error, talk) {
@@ -263,7 +269,7 @@ router.add("PUT", /^\/talks\/([^\/]+)$/,
 
 Добавление комментария к теме работает сходным образом. Мы используем readStreamAsJSON для получения содержимого сообщения, проверяем результирующие данные и сохраняем их как комментарий, если они приемлемы.
 
-```
+```js
 router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
            function(request, response, title) {
   readStreamAsJSON(request, function(error, comment) {
@@ -291,7 +297,7 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
 
 Есть много различных ситуаций, в которых нам нужно отправить клиенту список тем, поэтому мы сначала определим вспомогательную функцию, присоединяющую поле serverTime к таким ответам.
 
-```
+```js
 function sendTalks(talks, response) {
   respondJSON(response, 200, {
     serverTime: Date.now(),
@@ -302,7 +308,7 @@ function sendTalks(talks, response) {
 
 Обработчик должен посмотреть на все параметры запроса в его URL, чтобы проверить, не задан ли параметр changesSince. Если дать функции parse модуля “url” второй аргумент значения true, он также распарсит вторую часть URL – query, часть запроса. У возвращаемого объекта будет свойство query, в котором будет ещё один объект, с именами и значениями параметров.
 
-```
+```js
 router.add("GET", /^\/talks$/, function(request, response) {
   var query = require("url").parse(request.url, true).query;
   if (query.changesSince == null) {
@@ -329,7 +335,7 @@ router.add("GET", /^\/talks$/, function(request, response) {
 
 Иначе, сперва надо проверить параметр changeSince на предмет того, что это число. Функция getChangedTalks, которую мы вскоре определим, возвращает массив изменённых тем с некоего заданного времени. Если она возвращает пустой массив, то серверу нечего возвращать клиенту, так что он сохраняет объект response (при помощи waitForChanges), чтобы ответить попозже.
 
-```
+```js
 var waiting = [];
 
 function waitForChanges(since, response) {
@@ -351,7 +357,7 @@ function waitForChanges(since, response) {
 
 Чтобы найти именно те темы, которые сменились после заданного времени, нам надо отслеживать историю изменений. Регистрация изменения при помощи registerChange запомнит это изменение, вместе с текущим временем, в массиве changes. Когда случается изменение, это значит – есть новые данные, поэтому всем ждущим запросам можно немедленно ответить.
 
-```
+```js
 var changes = [];
 
 function registerChange(title) {
@@ -365,7 +371,7 @@ function registerChange(title) {
 
 Наконец, getChangedTalks использует массив changes, чтобы построить массив изменившихся тем, включая объекты со свойством deleted для тем, которых уже не существует. При построении массива getChangedTalks должна убедиться, что одна и та же тема не включается дважды, так как тема могла измениться несколько раз с заданного момента времени.
 
-```
+```js
 function getChangedTalks(since) {
   var found = [];
   function alreadySeen(title) {
@@ -396,7 +402,7 @@ function getChangedTalks(since) {
 
 Значит, если надо показать страницу, когда браузер будет запрашивать наш сервер, её надо положить в public/index.html. Вот начало файла index:
 
-```
+```html
 <!doctype html>
 
 <title>Обмен опытом</title>
@@ -415,7 +421,7 @@ function getChangedTalks(since) {
 
 Затем идёт форма для создания новой темы.
 
-```
+```html
 <form id="newtalk">
   <h3>Submit a talk</h3>
   Заголовок: <input type="text" style="width: 40em" name="title">
@@ -429,7 +435,7 @@ function getChangedTalks(since) {
 
 Затем идёт загадочный блок, у которого стиль display установлен в none, и который поэтому не виден на странице. Догадаетесь, зачем он нужен?
 
-```
+```html
 <div id="template" style="display: none">
   <div>
     <h2>{{title}}</h2>
@@ -454,14 +460,14 @@ function getChangedTalks(since) {
 
 И наконец, HTML включает файл скрипта, содержащего клиентский код.
 
-```
+```html
 <script src="skillsharing_client.js"></script>
 ```
 
 ##Запуск
 Первое, что клиент должен сделать при загрузке страницы, это запросить с сервера текущий набор тем. Так как мы будем делать много HTTP-запросов, мы определим небольшую обёртку вокруг XMLHttpRequest, которая примет объект для настройки запроса и обратного вызова по окончанию запроса.
 
-```
+```js
 function request(options, callback) {
   var req = new XMLHttpRequest();
   req.open(options.method || "GET", options.pathname, true);
@@ -480,7 +486,7 @@ function request(options, callback) {
 
 Начальный запрос показывает полученные темы на экране и начинает процесс длинных запросов, вызывая waitForChanges.
 
-```
+```js
 var lastServerTime = 0;
 
 request({pathname: "talks"}, function(error, response) {
@@ -499,7 +505,7 @@ request({pathname: "talks"}, function(error, response) {
 
 Когда запрос не удался, нам не надо, чтобы страница просто сидела и ничего не делала. Мы определим простую функцию под названием reportError, которая хотя бы покажет пользователю диалог, сообщающий об ошибке.
 
-```
+```js
 function reportError(error) {
   if (error)
     alert(error.toString());
@@ -513,7 +519,7 @@ function reportError(error) {
 
 Функция displayTalks используется как для построения начального экрана, так и для его обновления при изменениях. Она будет использовать объект shownTalks, связывающий заголовки тем с узлами DOM, чтобы запомнить темы, которые уже есть на экране.
 
-```
+```js
 var talkDiv = document.querySelector("#talks");
 var shownTalks = Object.create(null);
 
@@ -541,7 +547,7 @@ function displayTalks(talks) {
 
 Параметр name – имя шаблона. Чтобы найти элемент шаблона, мы ищем элементы, у которых имя класса совпадает с именем шаблона, который является дочерним у элемента с ID “template”. Метод querySelector облегчает этот процесс. На странице есть шаблоны “talk” и “comment”.
 
-```
+```js
 function instantiateTemplate(name, values) {
   function instantiateText(text) {
     return text.replace(/\{\{(\w+)\}\}/g, function(_, name) {
@@ -571,7 +577,7 @@ function instantiateTemplate(name, values) {
 
 Этот подход к шаблонам довольно груб, но для создания drawTalk его будет достаточно.
 
-```
+```js
 function drawTalk(talk) {
   var node = instantiateTemplate("talk", talk);
   var comments = node.querySelector(".comments");
@@ -598,7 +604,7 @@ function drawTalk(talk) {
 ##Обновление сервера
 Обработчики событий, зарегистрированные в drawTalk, вызывают функции deleteTalk и addComment непосредственно для действий, необходимых для удаления темы или добавления комментария. Это будет нужно для построения URL, которые ссылаются на темы с заданным именем, для которых мы определяем вспомогательную функцию talkURL.
 
-```
+```js
 function talkURL(title) {
   return "talks/" + encodeURIComponent(title);
 }
@@ -606,7 +612,7 @@ function talkURL(title) {
 
 Функция deleteTalk запускает запрос DELETE и сообщает об ошибке в случае неудачи.
 
-```
+```js
 function deleteTalk(title) {
   request({pathname: talkURL(title), method: "DELETE"},
           reportError);
@@ -615,7 +621,7 @@ function deleteTalk(title) {
 
 Для добавления комментария нужно построить его представление в формате JSON и отправить его как часть POST-запроса.
 
-```
+```js
 function addComment(title, comment) {
   var comment = {author: nameField.value, message: comment};
   request({pathname: talkURL(title) + "/comments",
@@ -627,7 +633,7 @@ function addComment(title, comment) {
 
 Переменная nameField, используемая для установки свойства комментария author, ссылается на поле `<input>` вверху страницы, которое позволяет пользователю задать его имя. Мы также подключаем это поле к localStorage, чтобы его не приходилось заполнять каждый раз при перезагрузке страницы.
 
-```
+```js
 var nameField = document.querySelector("#name");
 
 nameField.value = localStorage.getItem("name") || "";
@@ -657,7 +663,7 @@ talkForm.addEventListener("submit", function(event) {
 
 Учитывая созданную на сервере систему и то, как мы определили displayTalks для обработки изменений тем, которые уже есть на странице, сам механизм длинных запросов оказывается неожиданно простым.
 
-```
+```js
 function waitForChanges() {
   request({pathname: "talks?changesSince=" + lastServerTime},
           function(error, response) {
@@ -700,7 +706,7 @@ function waitForChanges() {
 
 Это могло бы выглядеть так:
 
-```
+```html
 <div>
   <div template-repeat="comments">
     <span>{{author}}</span>: {{message}}
