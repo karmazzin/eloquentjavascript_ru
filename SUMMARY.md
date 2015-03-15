@@ -1,6 +1,6 @@
 # Summary
 
-* [Введение](chapters/chapter0.md)
+* [О программировании](chapters/chapter0.md)
 * [Величины, типы и операторы](chapters/chapter1.md)
 * [Структура программ](chapters/chapter2.md)
 * [Функции](chapters/chapter3.md)
