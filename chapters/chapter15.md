@@ -35,7 +35,7 @@
 
 Простой уровень может выглядеть так:
 
-```
+```js
 var simpleLevelPlan = [
   "                      ",
   "                      ",
@@ -61,7 +61,7 @@ var simpleLevelPlan = [
 
 Следующий конструктор создаёт объект уровня. Аргументом должен быть массив строк, задающих уровень.
 
-```
+```js
 function Level(plan) {
   this.width = plan[0].length;
   this.height = plan.length;
@@ -99,7 +99,7 @@ function Level(plan) {
 
 После построения решётки мы используем метод filter, чтобы найти объект игрока, хранящийся в свойстве уровня. Свойство status отслеживает, выиграл игрок или проиграл. Когда это случается, используется finishDelay, которое держит уровень активным некоторое время для показа простой анимации. (Просто сразу восстанавливать состояние уровня или начинать следующий – это выглядит некрасиво). Этот метод можно использовать, чтобы узнать, закончен ли уровень:
 
-```
+```js
 Level.prototype.isFinished = function() {
   return this.status != null && this.finishDelay < 0;
 };
@@ -108,7 +108,7 @@ Level.prototype.isFinished = function() {
 ##Действующие лица (актёры)
 Для хранения позиции и размера наших актёров мы вернёмся к нашему верному типу Vector, который группирует координаты x и y в объект.
 
-```
+```js
 function Vector(x, y) {
   this.x = x; this.y = y;
 }
@@ -124,7 +124,7 @@ Vector.prototype.times = function(factor) {
 
 В предыдущей секции конструктором Level был использован объект actorChars, чтобы связать символы с функциями конструктора. Объект выглядит так:
 
-```
+```js
 var actorChars = {
   "@": Player,
   "o": Coin,
@@ -136,7 +136,7 @@ var actorChars = {
 
 Тип player построен следующим конструктором. У него есть свойство speed, хранящее его текущую скорость, что поможет нам симулировать импульс и гравитацию.
 
-```
+```js
 function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
   this.size = new Vector(0.8, 1.5);
@@ -149,7 +149,7 @@ Player.prototype.type = "player";
 
 При создании динамического объекта Lava, нам надо проинициализировать объект в зависимости от символа. Динамическая лава двигается с заданной скоростью, пока не встретит препятствие. Затем, если у неё есть свойство repeatPos, она отпрыгнет назад на стартовую позицию (капающая). Если нет, она инвертирует скорость и продолжает двигаться в обратном направлении (отскакивает). Конструктор задаёт только необходимые свойства. Позже мы напишем метод, который занимается самим движением.
 
-```
+```js
 function Lava(pos, ch) {
   this.pos = pos;
   this.size = new Vector(1, 1);
@@ -167,7 +167,7 @@ Lava.prototype.type = "lava";
 
 Монеты просты в реализации. Они просто сидят на месте. Но для оживления игры они будут подрагивать, слегка двигаясь по вертикали туда-сюда. Для отслеживания этого, объект coin хранит основную позицию вместе со свойством wobble, которое отслеживает фазу движения. Вместе они определяют положение монеты (хранящееся в свойстве pos).
 
-```
+```js
 function Coin(pos) {
   this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
   this.size = new Vector(0.6, 0.6);
@@ -182,7 +182,7 @@ Coin.prototype.type = "coin";
 
 Теперь мы написали всё, что необходимо для представления состояния уровня.
 
-```
+```js
 var simpleLevel = new Level(simpleLevelPlan);
 console.log(simpleLevel.width, "by", simpleLevel.height);
 // → 22 by 9
@@ -206,7 +206,7 @@ console.log(simpleLevel.width, "by", simpleLevel.height);
 
 Следующая вспомогательная функция даёт простой способ создания элемента с назначением класса.
 
-```
+```js
 function elt(name, className) {
   var elt = document.createElement(name);
   if (className) elt.className = className;
@@ -216,7 +216,7 @@ function elt(name, className) {
 
 Экран создаём, передавая ему родительский элемент, к которому необходимо подсоединиться, и объект уровня.
 
-```
+```js
 function DOMDisplay(parent, level) {
   this.wrap = parent.appendChild(elt("div", "game"));
   this.level = level;
@@ -233,7 +233,7 @@ function DOMDisplay(parent, level) {
 
 Координаты и размеры измеряются в единицах, относительных к размеру решётки так, что дистанция в единицу означает один элемент решётки. Когда мы задаём размеры в пикселях, нам нужно будет масштабировать координаты – игра была бы очень мелкой, если б один квадратик задавался одним пикселем. Переменная scale даёт количество пикселей, которое занимает один элемент решётки.
 
-```
+```js
 var scale = 20;
 
 DOMDisplay.prototype.drawBackground = function() {
@@ -252,7 +252,7 @@ DOMDisplay.prototype.drawBackground = function() {
 
 Как мы уже упоминали, фон рисуется через элемент `<table>`. Это удобно соответствует тому факту, что уровень задан в виде решётки – каждый ряд решётки превращается в ряд таблицы (элемент `<tr>`). Строки решётки используются как имена классов ячеек таблицы (`<td>`). Следующий CSS приводит фон к необходимому нам внешнему виду:
 
-```
+```css
 .background    { background: rgb(52, 166, 251);
                  table-layout: fixed;
                  border-spacing: 0;              }
@@ -267,7 +267,7 @@ DOMDisplay.prototype.drawBackground = function() {
 
 Каждый актёр рисуется созданием элемента DOM и заданием позиции и размера, основываясь на свойства актёра. Значения надо умножать на масштаб scale, чтобы переходить от единиц игры к пикселям.
 
-```
+```js
 DOMDisplay.prototype.drawActors = function() {
   var wrap = elt("div");
   this.level.actors.forEach(function(actor) {
@@ -284,7 +284,7 @@ DOMDisplay.prototype.drawActors = function() {
 
 Чтобы задать элементу больше одного класса, мы разделяем их имена пробелами. В коде CSS класс actor задаёт позицию absolute. Имя типа используется в дополнительном классе для задания цвета. Нам не надо заново определять класс lava, потому что мы повторно используем класс для лавы из решётки, который мы определили ранее.
 
-```
+```css
 .actor  { position: absolute;            }
 .coin   { background: rgb(241, 229, 89); }
 .player { background: rgb(64, 64, 64);   }
@@ -292,7 +292,7 @@ DOMDisplay.prototype.drawActors = function() {
 
 При обновлении экрана метод drawFrame удаляет старое изображение актёра, если оно было, и затем перерисовывает его на новой позиции. Напрашивается использование элементов DOM в качестве актёров, но для этого нам потребовалось бы передавать слишком много дополнительной информации между кодом дисплея и кодом симуляции. Надо было бы связать актёров с элементами DOM, и код рисования должен был бы удалять элементы при исчезновении актёров. Так как обычно в игре актёров совсем немного, их перерисовка отнимает немного ресурсов.
 
-```
+```js
 DOMDisplay.prototype.drawFrame = function() {
   if (this.actorLayer)
     this.wrap.removeChild(this.actorLayer);
@@ -304,7 +304,7 @@ DOMDisplay.prototype.drawFrame = function() {
 
 Добавив в обёртку wrapper текущий статус уровня в виде класса, мы можем стилизовать персонажа по-разному в зависимости от того, выиграна игра или проиграна. Мы добавим правило CSS, которое работает, только когда у игрока есть потомок с заданным классом.
 
-```
+```css
 .lost .player {
   background: rgb(160, 64, 64);
 }
@@ -317,7 +317,7 @@ DOMDisplay.prototype.drawFrame = function() {
 
 Нельзя предполагать, что уровни всегда вмещаются в окно просмотра. Поэтому нам нужен scrollPlayerIntoView – он нужен для гарантии того, что если уровень не влезает в окно, он будет прокручен, чтобы игрок всегда был близко к центру. Следующий CSS задаёт обёртке максимальный размер, и гарантирует, что всё вылезающее за него не видно. Также мы задаём элементу позицию relative, чтобы актёры внутри него располагались относительно его левого верхнего угла.
 
-```
+```css
 .game {
   overflow: hidden;
   max-width: 600px;
@@ -328,7 +328,7 @@ DOMDisplay.prototype.drawFrame = function() {
 
 В методе scrollPlayerIntoView мы находим положение игрока и обновляем позицию прокрутки обёртывающего элемента. Мы меняем позицию, работая со свойствами scrollLeft и scrollTop, когда игрок подходит близко к краю.
 
-```
+```js
 DOMDisplay.prototype.scrollPlayerIntoView = function() {
   var width = this.wrap.clientWidth;
   var height = this.wrap.clientHeight;
@@ -361,7 +361,7 @@ DOMDisplay.prototype.scrollPlayerIntoView = function() {
 
 Ещё нам необходимо очищать уровень, когда мы переходим на следующий или начинаем заново.
 
-```
+```js
 DOMDisplay.prototype.clear = function() {
   this.wrap.parentNode.removeChild(this.wrap);
 };
@@ -369,7 +369,7 @@ DOMDisplay.prototype.clear = function() {
 
 Теперь мы можем показать наш уровень.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <script>
@@ -393,7 +393,7 @@ DOMDisplay.prototype.clear = function() {
 
 Метод сообщает, не пересекается ли прямоугольник (заданный позицией и размером) с каким-либо непустым пространством фоновой решётки.
 
-```
+```js
 Level.prototype.obstacleAt = function(pos, size) {
   var xStart = Math.floor(pos.x);
   var xEnd = Math.ceil(pos.x + size.x);
@@ -422,7 +422,7 @@ Level.prototype.obstacleAt = function(pos, size) {
 
 Этот метод сканирует массив актёров, в поисках того, который накладывается на заданный аргумент:
 
-```
+```js
 Level.prototype.actorAt = function(actor) {
   for (var i = 0; i < this.actors.length; i++) {
     var other = this.actors[i];
@@ -439,7 +439,7 @@ Level.prototype.actorAt = function(actor) {
 ##Актёры и действия
 Метод animate типа Level даёт возможность всем актёрам уровня сдвинуться. Аргумент step задаёт временной промежуток. Объект keys содержит информацию про стрелки клавиатуры, нажатые игроком.
 
-```
+```js
 var maxStep = 0.05;
 
 Level.prototype.animate = function(step, keys) {
@@ -462,7 +462,7 @@ Level.prototype.animate = function(step, keys) {
 
 У объектов актёров есть метод act, который принимает временной шаг, объект level и объект keys. Вот он для типа Lava, который игнорирует объект key:
 
-```
+```js
 Lava.prototype.act = function(step, level) {
   var newPos = this.pos.plus(this.speed.times(step));
   if (!level.obstacleAt(newPos, this.size))
@@ -478,7 +478,7 @@ Lava.prototype.act = function(step, level) {
 
 Монеты используют метод act, чтобы дрожать. Столкновения они игнорируют, поскольку они просто подрагивают внутри своего квадрата, а столкновения с игроком будут обрабатываться методом act игрока.
 
-```
+```js
 var wobbleSpeed = 8, wobbleDist = 0.07;
 
 Coin.prototype.act = function(step) {
@@ -492,7 +492,7 @@ Coin.prototype.act = function(step) {
 
 Остаётся игрок. Движение игрока обрабатывается по разным осям отдельно, потому что встреча с полом не должна мешать горизонтальному перемещению, а встреча со стеной – падению или прыжку. Этот метод работает с горизонтальным перемещением.
 
-```
+```js
 var playerXSpeed = 7;
 
 Player.prototype.moveX = function(step, level, keys) {
@@ -514,7 +514,7 @@ Player.prototype.moveX = function(step, level, keys) {
 
 Движение по вертикали работает сходным образом, но симулирует прыжки и гравитацию.
 
-```
+```js
 var gravity = 30;
 var jumpSpeed = 17;
 
@@ -541,7 +541,7 @@ Player.prototype.moveY = function(step, level, keys) {
 
 Сам метод act следующий:
 
-```
+```js
 Player.prototype.act = function(step, level, keys) {
   this.moveX(step, level, keys);
   this.moveY(step, level, keys);
@@ -564,7 +564,7 @@ Player.prototype.act = function(step, level, keys) {
 
 Вот метод, обрабатывающий столкновения между игроком и другими объектами:
 
-```
+```js
 Level.prototype.playerTouched = function(type, actor) {
   if (type == "lava" && this.status == null) {
     this.status = "lost";
@@ -592,7 +592,7 @@ Level.prototype.playerTouched = function(type, actor) {
 
 Следующая функция, когда ей дают объект с кодами клавиш в виде имён свойств и названиями клавиш в виде значений, возвращает другой объект, который отслеживает текущее состояние кнопок. Он регистрирует обработчики событий для событий «keydown» и «keyup», и когда код клавиши события совпадает с отслеживаемым кодом, обновляет объект.
 
-```
+```js
 var arrowCodes = {37: "left", 38: "up", 39: "right"};
 
 function trackKeys(codes) {
@@ -617,7 +617,7 @@ function trackKeys(codes) {
 
 Давайте определим вспомогательную функцию, оборачивающую эти скучные операции в удобный интерфейс, и позволяющую нам просто вызвать runAnimation, задавая ей функцию, которая принимает разницу во времени и рисует один кадр. Когда функция frame возвращает false, анимация останавливается.
 
-```
+```js
 function runAnimation(frameFunc) {
   var lastTime = null;
   function frame(time) {
@@ -640,7 +640,7 @@ function runAnimation(frameFunc) {
 
 Функция runLevel принимает объект Level, конструктор для display, и, необязательным параметром – функцию. Она выводит уровень в document.body и позволяет пользователю играть на нём. Когда уровень закончен (победа или поражение), runLevel очищает экран, останавливает анимацию, а если задана функция andThen, вызывает её со статусом уровня.
 
-```
+```js
 var arrows = trackKeys(arrowCodes);
 
 function runLevel(level, Display, andThen) {
@@ -660,7 +660,7 @@ function runLevel(level, Display, andThen) {
 
 Игра – это последовательность уровней. Когда игрок погибает, уровень начинается заново. Когда уровень закончен, мы переходим на следующий. Это можно выразить следующей функцией, принимающей массив планов уровней (массив строк) и конструктор display
 
-```
+```js
 function runGame(plans, Display) {
   function startLevel(n) {
     runLevel(new Level(plans[n]), Display, function(status) {
@@ -682,7 +682,7 @@ function runGame(plans, Display) {
 
 В переменной GAME_LEVELS хранится набор планов уровней. Такая страница скармливает их в runGame, которая запускает саму игру.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <body>
@@ -700,7 +700,7 @@ function runGame(plans, Display) {
 
 Подредактируйте runGame, чтобы она поддерживала жизни. Пусть игрок начинает с трёх.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <body>
@@ -733,7 +733,7 @@ function runGame(plans, Display) {
 
 Когда получится, можете попробовать ещё кое-что. Мы регистрируем события с клавиатуры не самым лучшим способом. Объект arrows – глобальная переменная, и его обработчики событий находятся в памяти, даже если игра не запущена. Можно сказать, они утекают из системы. Расширьте trackKeys, чтоб можно было разрегистрировать обработчики и затем поменяйте runLevel, чтоб она регистрировала их на старте, и разрегистрировала на финише.
 
-```
+```html
 <link rel="stylesheet" href="css/game.css">
 
 <body>

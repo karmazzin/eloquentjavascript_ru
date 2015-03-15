@@ -41,14 +41,14 @@ JavaScript легко вписывается в систему типа Node. Э
 ##Команда node
 Когда в вашей системе установлен Node.js, у вас появляется программа под названием node, которая запускает файлы JavaScript. Допустим, у вас есть файл hello.js со следующим кодом:
 
-```
+```js
 var message = "Hello world";
 console.log(message);
 ```
 
 Вы можете выполнить свою программу из командной строки:
 
-```
+```js
 $ node hello.js
 Hello world
 ```
@@ -57,7 +57,7 @@ Hello world
 
 Если запустить node без файла, он выдаст вам строку запроса, в которой можно писать код на JavaScript и получать результат.
 
-```
+```js
 $ node
 > 1 + 1
 2
@@ -71,7 +71,7 @@ $
 
 Для доступа к аргументам командной строки, переданным программе, можно читать массив строк process.argv. В него также включены имя команды node и имя вашего скрипта, поэтому список аргументов начинается с индекса 2. Если файл showargv.js содержит только инструкцию console.log(process.argv), его можно запустить так:
 
-```
+```js
 $ node showargv.js one --and two
 ["node", "/home/marijn/showargv.js", "one", "--and", "two"]
 ```
@@ -91,7 +91,7 @@ $ node showargv.js one --and two
 
 Для демонстрации давайте сделаем простой проект из двух файлов. Первый назовём main.js, и в нём будет определён скрипт, вызываемый из командной строки, предназначенный для искажения строк.
 
-```
+```js
 var garble = require("./garble");
 
 // По индексу 2 содержится первый аргумент программы из командной строки
@@ -102,7 +102,7 @@ console.log(garble(argument));
 
 Файл garble.js определяет библиотеку искажения строк, которая может использоваться как заданной ранее программой для командной строки, так и другими скриптами, которым нужен прямой доступ к функции garble.
 
-```
+```js
 module.exports = function(string) {
   return string.split("").map(function(ch) {
     return String.fromCharCode(ch.charCodeAt(0) + 5);
@@ -116,7 +116,7 @@ module.exports = function(string) {
 
 Теперь мы можем вызвать наш инструмент:
 
-```
+```sh
 $ node main.js JavaScript
 Of{fXhwnuy
 ```
@@ -163,7 +163,7 @@ NPM – это больше, чем просто npm install. Он читает 
 
 К примеру, есть функция readFile, читающая файл и делающая обратный вызов с содержимым файла.
 
-```
+```js
 var fs = require("fs");
 fs.readFile("file.txt", "utf8", function(error, text) {
   if (error)
@@ -174,7 +174,7 @@ fs.readFile("file.txt", "utf8", function(error, text) {
 
 Второй аргумент readFile задаёт кодировку символов, в которой нужно преобразовывать содержимое файла в строку. Текст можно преобразовать в двоичные данные разными способами, но самым новым из них является UTF-8. Если у вас нет оснований полагать, что в файле содержится текст в другой кодировке, можно смело передавать параметр «utf8». Если вы не задали кодировку, Node выдаст вам данные в двоичной кодировке в виде объекта Buffer, а не строки. Это массивоподобный объект, содержащий байты из файла.
 
-```
+```js
 var fs = require("fs");
 fs.readFile("file.txt", function(error, buffer) {
   if (error)
@@ -186,7 +186,7 @@ fs.readFile("file.txt", function(error, buffer) {
 
 Схожая функция, writeFile, используется для записи файла на диск.
 
-```
+```js
 var fs = require("fs");
 fs.writeFile("graffiti.txt", "Здесь был Node ", function(err) {
   if (err)
@@ -202,7 +202,7 @@ fs.writeFile("graffiti.txt", "Здесь был Node ", function(err) {
 
 Многие функции “fs” имеют как синхронный, так и асинхронный вариант. К примеру, есть синхронный вариант функции readFile под названием readFileSync.
 
-```
+```js
 var fs = require("fs");
 console.log(fs.readFileSync("file.txt", "utf8"));
 ```
@@ -214,7 +214,7 @@ console.log(fs.readFileSync("file.txt", "utf8"));
 
 Вот всё, что нужно для запуска простейшего HTTP сервера:
 
-```
+```js
 var http = require("http");
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
@@ -241,7 +241,7 @@ server.listen(8000);
 
 Чтобы сделать HTTP-клиент, мы можем использовать функцию модуля “http” request.
 
-```
+```js
 var http = require("http");
 var request = http.request({
   hostname: "eloquentjavascript.net",
@@ -276,7 +276,7 @@ request.end();
 
 Следующий код создаёт сервер, читающий тела запросов и отправляющий их в ответ потоком в виде текста из заглавных букв.
 
-```
+```js
 var http = require("http");
 http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/plain"});
@@ -293,7 +293,7 @@ http.createServer(function(request, response) {
 
 Следующий код, будучи запущенным одновременно с сервером, отправит запрос на сервер и выведет полученный ответ:
 
-```
+```js
 var http = require("http");
 var request = http.request({
   hostname: "localhost",
@@ -318,7 +318,7 @@ request.end("Hello server");
 
 Программу мы будем строить постепенно, используя объект methods для хранения функций, обрабатывающих разные методы HTTP.
 
-```
+```js
 var http = require("http"), fs = require("fs");
 
 var methods = Object.create(null);
@@ -347,7 +347,7 @@ http.createServer(function(request, response) {
 
 Чтобы получить путь из URL в запросе, функция urlToPath, используя встроенный модуль Node “url”, разбирает URL. Она принимает имя пути, нечто вроде /file.txt, декодирует, чтобы убрать экранирующие коды %20, и вставляет в начале точку, чтобы получить путь относительно текущего каталога.
 
-```
+```js
 function urlToPath(url) {
   var path = require("url").parse(url).pathname;
   return "." + decodeURIComponent(path);
@@ -371,7 +371,7 @@ mime@1.2.11 node_modules/mime
 
 Когда запрошенного файла не существует, правильным кодом ошибки для этого случая будет 404. Мы будем использовать fs.stat для возврата информации по файлу, чтобы выяснить, есть ли такой файл, и не директория ли это.
 
-```
+```js
 methods.GET = function(path, respond) {
   fs.stat(path, function(error, stats) {
     if (error && error.code == "ENOENT")
@@ -402,7 +402,7 @@ methods.GET = function(path, respond) {
 
 Код обработки DELETE будет проще:
 
-```
+```js
 methods.DELETE = function(path, respond) {
   fs.stat(path, function(error, stats) {
     if (error && error.code == "ENOENT")
@@ -419,7 +419,7 @@ methods.DELETE = function(path, respond) {
 
 Возможно, вам интересно, почему попытка удаления несуществующего файла возвращает статус 204 вместо ошибки. Можно сказать, что при попытке удалить несуществующий файл, так как файла там уже нет, то запрос уже исполнен. Стандарт HTTP поощряет людей делать идемпотентные запросы – то есть такие, при которых многократный повтор одного и того же действия не приводит к разным результатам.
 
-```
+```js
 function respondErrorOrNothing(respond) {
   return function(error) {
     if (error)
@@ -434,7 +434,7 @@ function respondErrorOrNothing(respond) {
 
 Вот обработчик запросов PUT:
 
-```
+```js
 methods.PUT = function(path, respond, request) {
   var outStream = fs.createWriteStream(path);
   outStream.on("error", function(error) {
@@ -477,7 +477,7 @@ File not found
 
 Ещё один подход – использование обещаний, которые были описаны в главе 17. Они ловят исключения, выброшенные функциями обратного вызова и передают их как ошибки. В Node можно загрузить библиотеку promise и использовать её для обработки асинхронных вызовов. Немногие библиотеки Node интегрируют обещания, но обычно их довольно просто обернуть. Отличный модуль “promise” с NPM содержит функцию denodeify, которая берёт асинхронную функцию вроде fs.readFile и преобразовывает её в функцию, возвращающую обещание.
 
-```
+```js
 var Promise = require("promise");
 var fs = require("fs");
 
@@ -495,7 +495,7 @@ readFile("file.txt", "utf8").then(function(content) {
 
 Объект fsp, использующийся в коде, содержит варианты функций fs с обещаниями, обёрнутыми при помощи Promise.denodeify. Возвращаемый из обработчика метода объект, со свойствами code и body, становится окончательным результатом цепочки обещаний, и он используется для определения того, какой ответ отправить клиенту.
 
-```
+```js
 methods.GET = function(path) {
   return inspectPath(path).then(function(stats) {
     if (!stats) // Does not exist
@@ -542,7 +542,7 @@ NPM предоставляет библиотеки для всего, что в
 
 Если вам это непонятно, вспомните функцию urlToPath, которая определялась так:
 
-```
+```js
 function urlToPath(url) {
   var path = require("url").parse(url).pathname;
   return "." + decodeURIComponent(path);

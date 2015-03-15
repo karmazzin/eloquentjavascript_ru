@@ -68,7 +68,7 @@ Last-Modified: Wed, 09 Apr 2014 10:48:09 GMT
 
 На страницах HTML могут быть формы, которые позволяют пользователям вписывать информацию и отправлять её на сервер. Вот пример формы:
 
-```
+```html
 <form method="GET" action="example/message.html">
   <p>Имя: <input type="text" name="name"></p>
   <p>Сообщение:<br><textarea name="message"></textarea></p>
@@ -86,7 +86,7 @@ GET /example/message.html?name=Jean&message=Yes%3F HTTP/1.1
 
 Сообщение, отправляемое в примере, содержит строку “Yes?”, хотя знак вопроса и заменён каким-то странным кодом. Некоторые символы в строке запроса нужно экранировать (escape). Знак вопроса в том числе, и он представляется кодом %3F. Есть какое-то неписаное правило, по которому у каждого формата должен быть способ экранировать символы. Это правило под названием кодирование URL использует процент, за которым идут две шестнадцатеричные цифры, которые представляют код символа. 3F в десятичной системе будет 63, и это код знака вопроса. У JavaScript есть функции encodeURIComponent и decodeURIComponent для кодирования и раскодирования.
 
-```
+```js
 console.log(encodeURIComponent("Hello & goodbye"));
 // → Hello%20%26%20goodbye
 console.log(decodeURIComponent("Hello%20%26%20goodbye"));
@@ -119,7 +119,7 @@ name=Jean&message=Yes%3F
 ##Отправка запроса
 Чтобы отправить простой запрос, мы создаём объект запроса с конструктором XMLHttpRequest и вызываем методы open и send.
 
-```
+```js
 var req = new XMLHttpRequest();
 req.open("GET", "example/data.txt", false);
 req.send(null);
@@ -133,7 +133,7 @@ console.log(req.responseText);
 
 Можно получить из объекта response и другую информацию. Код статуса доступен в свойстве status, а текст статуса – в statusText. Заголовки можно прочесть из getResponseHeader.
 
-```
+```js
 var req = new XMLHttpRequest();
 req.open("GET", "example/data.txt", false);
 req.send(null);
@@ -154,7 +154,7 @@ console.log(req.getResponseHeader("content-type"));
 
 Но пока запрос обрабатывается, мы не получим ответ. Нам нужен механизм оповещения о том, что данные поступили и готовы. Для этого нам нужно будет слушать событие “load”.
 
-```
+```js
 var req = new XMLHttpRequest();
 req.open("GET", "example/data.txt", true);
 req.addEventListener("load", function() {
@@ -169,7 +169,7 @@ req.send(null);
 
 Когда ресурс, возвращённый объектом XMLHttpRequest, является документом XML, свойство responseXML будет содержать разобранное представление о документе. Оно работает схожим с DOM образом, за исключением того, что у него нет присущей HTML функциональности навроде свойства style. Объект, содержащийся в responseXML, соответствует объекту document. Его свойство documentElement ссылается на внешний тег документа XML. В следующем документе (example/fruit.xml) таким тегом будет :
 
-```
+```html
 <fruits>
   <fruit name="banana" color="yellow"/>
   <fruit name="lemon" color="yellow"/>
@@ -179,7 +179,7 @@ req.send(null);
 
 Мы можем получить такой файл следующим образом:
 
-```
+```js
 var req = new XMLHttpRequest();
 req.open("GET", "example/fruit.xml", false);
 req.send(null);
@@ -189,7 +189,7 @@ console.log(req.responseXML.querySelectorAll("fruit").length);
 
 Документы XML можно использовать для обмена с сервером структурированной информацией. Их форма – вложенные теги – хорошо подходит для хранения большинства данных, ну или по крайней мере лучше, чем текстовые файлы. Интерфейс DOM неуклюж в плане извлечения информации, и XML документы получаются довольно многословными. Обычно лучше общаться при помощи данных в формате JSON, которые проще читать и писать – как программам, так и людям.
 
-```
+```js
 var req = new XMLHttpRequest();
 req.open("GET", "example/fruit.json", false);
 req.send(null);
@@ -209,7 +209,7 @@ Access-Control-Allow-Origin: *
 ##Абстрагируем запросы
 В главе 10 в нашей реализации модульной системы AMD мы использовали гипотетическую функцию backgroundReadFile. Она принимала имя файла и функцию, и вызывала эту функцию после прочтения содержимого файла. Вот простая реализация этой функции:
 
-```
+```js
 function backgroundReadFile(url, callback) {
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
@@ -233,7 +233,7 @@ function backgroundReadFile(url, callback) {
 
 Обработка ошибок в асинхронном коде ещё сложнее, чем в синхронном. Поскольку нам часто приходится отделять часть работы и размещать её в функции обратного вызова, область видимости блока try теряет смысл. В следующем коде исключение не будет поймано, потому что вызов backgroundReadFile возвращается сразу же. Затем управление уходит из блока try, и функция из него не будет вызвана.
 
-```
+```js
 try {
   backgroundReadFile("example/data.txt", function(text) {
     if (text != "expected")
@@ -246,7 +246,7 @@ try {
 
 Чтобы обрабатывать неудачные запросы, придётся передавать дополнительную функцию в нашу обёртку, и вызывать её в случае проблем. Другой вариант – использовать соглашение, что если запрос не удался, то в функцию обратного вызова передаётся дополнительный аргумент с описанием проблемы. Пример:
 
-```
+```js
 function getURL(url, callback) {
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
@@ -268,7 +268,7 @@ function getURL(url, callback) {
 
 Код, использующий getURL, должен проверять не возвращена ли ошибка, и обрабатывать её, если она есть.
 
-```
+```js
 getURL("data/nonsense.txt", function(content, error) {
   if (error != null)
     console.log("Failed to fetch nonsense.txt: " + error);
@@ -290,7 +290,7 @@ getURL("data/nonsense.txt", function(content, error) {
 
 И вот наша обёртка для запросов GET, которая на этот раз возвращает обещание. Теперь мы просто назовём его get.
 
-```
+```js
 function get(url) {
   return new Promise(function(succeed, fail) {
     var req = new XMLHttpRequest();
@@ -311,7 +311,7 @@ function get(url) {
 
 Заметьте, что интерфейс к самой функции упростился. Мы передаём ей URL, а она возвращает обещание. Оно работает как обработчик для выходных данных запроса. У него есть метод then, который вызывается с двумя функциями: одной для обработки успеха, другой – для неудачи.
 
-```
+```js
 get("example/data.txt").then(function(text) {
   console.log("data.txt: " + text);
 }, function(error) {
@@ -325,7 +325,7 @@ get("example/data.txt").then(function(text) {
 
 Значит, вы можете использовать then для изменения результата обещания. К примеру, следующая функция возвращает обещание, чей результат – содержимое с данного URL, разобранное как JSON:
 
-```
+```js
 function getJSON(url) {
   return get(url).then(JSON.parse);
 }
@@ -337,7 +337,7 @@ function getJSON(url) {
 
 Нам нужно получить имя матери супруга из example/bert.json. В случае проблем нам нужно убрать текст «загрузка» и показать сообщение об ошибке. Вот как это можно делать при помощи обещаний:
 
-```
+```html
 <script>
   function showMessage(msg) {
     var elt = document.createElement("div");
@@ -391,7 +391,7 @@ function getJSON(url) {
 
 Интерфейс, через который JavaScript делает HTTP-запросы из браузера, называется XMLHttpRequest. Можно игнорировать приставку “XML” (но писать её всё равно нужно). Использовать его можно двумя способами: синхронным, который блокирует всю работу до окончания выполнения запроса, и асинхронным, который требует установки обработчика событий, отслеживающего окончание запроса. Почти во всех случаях предпочтительным является асинхронный способ. Создание запроса выглядит так:
 
-```
+```js
 var req = new XMLHttpRequest();
 req.open("GET", "example/data.txt", true);
 req.addEventListener("load", function() {
@@ -419,7 +419,7 @@ URL eloquentjavascript.net/author настроен на ответ как пря
 
 Заметьте, что после завершения обещания (когда оно либо завершилось успешно, либо с ошибкой), оно не может заново выдать ошибку или успех, и дальнейшие вызовы функции игнорируются. Это может упростить обработку ошибок в вашем обещании.
 
-```
+```js
 function all(promises) {
   return new Promise(function(success, fail) {
     // Ваш код.
