@@ -1,0 +1,18 @@
+{
+    "plugins": [
+        "anchors",
+        "ga"
+    ],
+    "pluginsConfig": {
+        "ga": {
+            "token": "UA-44401879-3"
+        },
+        "fontSettings": {
+            "size": 1
+        }
+    },
+    "pdf": {
+        "fontSize": 18
+        
+    }
+}
