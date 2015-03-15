@@ -78,8 +78,8 @@ function Grid(width, height) {
   this.height = height;
 }
 Grid.prototype.isInside = function(vector) {
-  return vector.x >= 0 &amp;&amp; vector.x < this.width &amp;&amp;
-         vector.y >= 0 &amp;&amp; vector.y < this.height;
+  return vector.x >= 0 && vector.x < this.width &&
+         vector.y >= 0 && vector.y < this.height;
 };
 Grid.prototype.get = function(vector) {
   return this.space[vector.x + this.width * vector.y];
@@ -290,7 +290,7 @@ Grid.prototype.forEach = function(f, context) {
 World.prototype.turn = function() {
   var acted = [];
   this.grid.forEach(function(critter, vector) {
-    if (critter.act &amp;&amp; acted.indexOf(critter) == -1) {
+    if (critter.act && acted.indexOf(critter) == -1) {
       acted.push(critter);
       this.letAct(critter, vector);
     }
@@ -303,9 +303,9 @@ World.prototype.turn = function() {
 ```js
 World.prototype.letAct = function(critter, vector) {
   var action = critter.act(new View(this, vector));
-  if (action &amp;&amp; action.type == "move") {
+  if (action && action.type == "move") {
     var dest = this.checkDestination(action, vector);
-    if (dest &amp;&amp; this.grid.get(dest) == null) {
+    if (dest && this.grid.get(dest) == null) {
       this.grid.set(vector, null);
       this.grid.set(dest, critter);
     }
@@ -453,8 +453,8 @@ var actionTypes = Object.create(null);
 
 LifelikeWorld.prototype.letAct = function(critter, vector) {
   var action = critter.act(new View(this, vector));
-  var handled = action &amp;&amp;
-    action.type in actionTypes &amp;&amp;
+  var handled = action &&
+    action.type in actionTypes &&
     actionTypes[action.type].call(this, critter,
                                   vector, action);
   if (!handled) {
@@ -504,7 +504,7 @@ actionTypes.move = function(critter, vector, action) {
 ```js
 actionTypes.eat = function(critter, vector, action) {
   var dest = this.checkDestination(action, vector);
-  var atDest = dest != null &amp;&amp; this.grid.get(dest);
+  var atDest = dest != null && this.grid.get(dest);
   if (!atDest || atDest.energy == null)
     return false;
   critter.energy += atDest.energy;
@@ -564,7 +564,7 @@ function PlantEater() {
 }
 PlantEater.prototype.act = function(context) {
   var space = context.find(" ");
-  if (this.energy > 60 &amp;&amp; space)
+  if (this.energy > 60 && space)
     return {type: "reproduce", direction: space};
   var plant = context.find("*");
   if (plant)

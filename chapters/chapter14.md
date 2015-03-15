@@ -178,7 +178,7 @@ console.log("1".charCodeAt(0));
 <p>Нажмите Ctrl-Space для продолжения.</p>
 <script>
   addEventListener("keydown", function(event) {
-    if (event.keyCode == 32 &amp;&amp; event.ctrlKey)
+    if (event.keyCode == 32 && event.ctrlKey)
       console.log("Продолжаем!");
   });
 </script>

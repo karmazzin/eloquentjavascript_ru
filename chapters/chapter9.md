@@ -425,7 +425,7 @@ console.log(text.replace(regexp, "_$1_"));
 ```js
 var name = "dea+hl[]rd";
 var text = "Этот dea+hl[]rd всех достал.";
-var escaped = name.replace(/[^\w\s]/g, "\\$&amp;");
+var escaped = name.replace(/[^\w\s]/g, "\\$&");
 var regexp = new RegExp("\\b(" + escaped + ")\\b", "gi");
 console.log(text.replace(regexp, "_$1_"));
 // → Этот _dea+hl[]rd_ всех достал.

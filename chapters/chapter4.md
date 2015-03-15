@@ -384,7 +384,7 @@ for (var event in correlations) {
 ```js
 for (var i = 0; i < JOURNAL.length; i++) {
   var entry = JOURNAL[i];
-  if (hasEvent("арахис", entry) &amp;&amp;
+  if (hasEvent("арахис", entry) &&
      !hasEvent("чистка зубов", entry))
     entry.events.push("арахис зубы");
 }

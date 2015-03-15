@@ -279,7 +279,7 @@ function filter(array, test) {
 }
 
 console.log(filter(ancestry, function(person) {
-  return person.born > 1900 &amp;&amp; person.born < 1925;
+  return person.born > 1900 && person.born < 1925;
 }));
 // → [{name: "Philibert Haverbeke", …}, …]
 ```

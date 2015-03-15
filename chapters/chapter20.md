@@ -327,7 +327,7 @@ http.createServer(function(request, response) {
   function respond(code, body, type) {
     if (!type) type = "text/plain";
     response.writeHead(code, {"Content-Type": type});
-    if (body &amp;&amp; body.pipe)
+    if (body && body.pipe)
       body.pipe(response);
     else
       response.end(body);
@@ -374,7 +374,7 @@ mime@1.2.11 node_modules/mime
 ```js
 methods.GET = function(path, respond) {
   fs.stat(path, function(error, stats) {
-    if (error &amp;&amp; error.code == "ENOENT")
+    if (error && error.code == "ENOENT")
       respond(404, "File not found");
     else if (error)
       respond(500, error.toString());
@@ -405,7 +405,7 @@ methods.GET = function(path, respond) {
 ```js
 methods.DELETE = function(path, respond) {
   fs.stat(path, function(error, stats) {
-    if (error &amp;&amp; error.code == "ENOENT")
+    if (error && error.code == "ENOENT")
       respond(204);
     else if (error)
       respond(500, error.toString());

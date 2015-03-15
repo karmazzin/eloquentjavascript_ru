@@ -101,7 +101,7 @@ function Level(plan) {
 
 ```js
 Level.prototype.isFinished = function() {
-  return this.status != null &amp;&amp; this.finishDelay < 0;
+  return this.status != null && this.finishDelay < 0;
 };
 ```
 
@@ -426,10 +426,10 @@ Level.prototype.obstacleAt = function(pos, size) {
 Level.prototype.actorAt = function(actor) {
   for (var i = 0; i < this.actors.length; i++) {
     var other = this.actors[i];
-    if (other != actor &amp;&amp;
-        actor.pos.x + actor.size.x > other.pos.x &amp;&amp;
-        actor.pos.x < other.pos.x + other.size.x &amp;&amp;
-        actor.pos.y + actor.size.y > other.pos.y &amp;&amp;
+    if (other != actor &&
+        actor.pos.x + actor.size.x > other.pos.x &&
+        actor.pos.x < other.pos.x + other.size.x &&
+        actor.pos.y + actor.size.y > other.pos.y &&
         actor.pos.y < other.pos.y + other.size.y)
       return other;
   }
@@ -525,7 +525,7 @@ Player.prototype.moveY = function(step, level, keys) {
   var obstacle = level.obstacleAt(newPos, this.size);
   if (obstacle) {
     level.playerTouched(obstacle);
-    if (keys.up &amp;&amp; this.speed.y > 0)
+    if (keys.up && this.speed.y > 0)
       this.speed.y = -jumpSpeed;
     else
       this.speed.y = 0;
@@ -566,7 +566,7 @@ Player.prototype.act = function(step, level, keys) {
 
 ```js
 Level.prototype.playerTouched = function(type, actor) {
-  if (type == "lava" &amp;&amp; this.status == null) {
+  if (type == "lava" && this.status == null) {
     this.status = "lost";
     this.finishDelay = 1;
   } else if (type == "coin") {
