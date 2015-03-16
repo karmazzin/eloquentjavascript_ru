@@ -12,7 +12,7 @@
             "size": 1
         },
         "customtheme": {
-            "css": ['custom/css/app.css']
+            "css": ["custom/css/app.css"]
         }
     },
     "pdf": {
