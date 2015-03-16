@@ -1,7 +1,8 @@
 {
     "plugins": [
         "anchors",
-        "ga"
+        "ga",
+        "customtheme"
     ],
     "pluginsConfig": {
         "ga": {
@@ -9,6 +10,9 @@
         },
         "fontSettings": {
             "size": 1
+        },
+        "customtheme": {
+            "css": ['custom/css/app.css']
         }
     },
     "pdf": {
