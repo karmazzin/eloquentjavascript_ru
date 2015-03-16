@@ -241,7 +241,9 @@ delete Object.prototype.nonsense;
 Мы можем объявить свои несчётные свойства через функцию Object.defineProperty, которая позволяет указывать тип создаваемого свойства.
 
 ```js
-Object.defineProperty(Object.prototype, "hiddenNonsense", {enumerable: false, value: "ку"});
+Object.defineProperty(Object.prototype, "hiddenNonsense", {
+  enumerable: false, value: "ку"
+});
 for (var name in map)
   console.log(name);
 // → пицца
