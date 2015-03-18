@@ -1,7 +1,8 @@
 {
     "plugins": [
         "anchors",
-        "ga"
+        "ga",
+        "typekit"
     ],
     "pluginsConfig": {},
     "pdf": {
