@@ -254,7 +254,8 @@ topEnv["false"] = false;
 Теперь мы можем вычислить простое выражение, меняющее булевское значение на обратное.
 
 ```js
-var prog = parse("if(true, false, true)"); console.log(evaluate(prog, topEnv)); // → false
+var prog = parse("if(true, false, true)"); 
+console.log(evaluate(prog, topEnv)); // → false
 ```
 
 Для поддержки простых арифметических операторов и сравнения мы добавим несколько функций в окружение. Для упрощения кода мы будем использовать new Function для создания набора функций-операторов в цикле, а не определять их все по отдельности.
