@@ -328,7 +328,7 @@ console.log("1".charCodeAt(0));
     height: 2000px;
   }
 </style>
-<div ><div></div></div>
+<div class="progress"><div></div></div>
 <p>Scroll me...</p>
 <script>
   var bar = document.querySelector(".progress div");
