@@ -1,17 +1,11 @@
 {
-  "plugins": [
-    "anchors",
-    "ga"
-  ],
-  "pluginsConfig": {
-    "ga": {
-      "token": "UA-44401879-3"
-    },
-    "fontSettings": {
-      "size": 2
+    "plugins": [
+        "anchors",
+        "ga",
+        "richquotes-booster"
+    ],
+    "pluginsConfig": {},
+    "pdf": {
+        "fontSize": 18
     }
-  },
-  "pdf": {
-    "fontSize": 18
-  }
 }
