@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "plugin-zawgyicss",
     "anchors",
     "ga"
   ],
