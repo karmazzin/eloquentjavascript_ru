@@ -14,5 +14,8 @@
   },
   "pdf": {
     "fontSize": 18
+  },
+  "disqus": {
+    "shortName": "eloquentjavascript_ru"
   }
 }
