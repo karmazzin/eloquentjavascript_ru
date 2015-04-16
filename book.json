@@ -1,11 +1,18 @@
 {
-    "plugins": [
-        "anchors",
-        "ga",
-        "disqus"
-    ],
-    "pluginsConfig": {},
-    "pdf": {
-        "fontSize": 18
+  "plugins": [
+    "anchors",
+    "ga",
+    "disqus"
+  ],
+  "pluginsConfig": {
+    "ga": {
+      "token": "UA-44401879-3"
+    },
+    "fontSettings": {
+      "size": 2
     }
+  },
+  "pdf": {
+    "fontSize": 18
+  }
 }
