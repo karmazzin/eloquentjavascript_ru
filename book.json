@@ -2,7 +2,8 @@
   "plugins": [
     "anchors",
     "ga",
-    "disqus"
+    "disqus",
+    "typekit@0.0.2"
   ],
   "pluginsConfig": {
     "ga": {
@@ -17,5 +18,11 @@
   },
   "disqus": {
     "shortName": "eloquentjavascript_ru"
-  }
+  },
+  "styles": {
+        "website": "styles/style.css",
+        "pdf": "styles/style.css",
+        "epub": "styles/style.css",
+        "mobi": "styles/style.css"
+    },
 }
