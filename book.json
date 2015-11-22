@@ -1,28 +1,22 @@
 {
-  "plugins": [
-    "anchors",
-    "ga",
-    "disqus",
-    "typekit@0.0.2"
-  ],
-  "pluginsConfig": {
-    "ga": {
-      "token": "UA-44401879-3"
+    "plugins": [
+        "anchors",
+        "ga",
+        "-disqus",
+        "typekit@0.0.2"
+    ],
+    "pluginsConfig": {
+        "ga": {
+            "token": "UA-44401879-3"
+        }
     },
-    "fontSettings": {
-      "size": 2
+    "pdf": {
+        "fontSize": 18
     },
-    "typekit" : {
-        "kitID": "qvh7ipq"
-    }
-  },
-  "pdf": {
-    "fontSize": 18
-  },
-  "disqus": {
-    "shortName": "eloquentjavascript"
-  },
-  "styles": {
+    "disqus": {
+        "shortName": "eloquentjavascript"
+    },
+    "styles": {
         "website": "styles/style.css",
         "pdf": "styles/style.css",
         "epub": "styles/style.css",
